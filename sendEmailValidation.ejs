@@ -1,0 +1,154 @@
+<script>
+$(document).on("click", "#sendemailbutton", function(){
+       var individualemailaddresses = new Array();
+       $(".emailaddedtolist").each(function(){
+           var individualemailaddress = $(this).data("emailadded");
+           var nameofrecipient = $(this).data("nameofrecipienttoadd") || "";
+           individualemailaddresses.push({"name": nameofrecipient, "email": individualemailaddress}); 
+       });
+       var emailto = $('select[name="emailto"]').val();
+       var emailtocurrentmemberssubject = $('input[name="emailtocurrentmemberssubject"]').val();
+       var emailtocurrentmembersmessage = $('textarea[name="emailtocurrentmembersmessage"]').val();
+       if((emailtocurrentmemberssubject == "") || (emailtocurrentmembersmessage == "")){
+           window.location.assign("/sphere/<%= sphereobjectid %>?error=sendemailerror&nosubject="+nosubject+"&nomessage="+nomessage);
+       } else {
+           console.log(individualemailaddresses);
+           $("#sendEmailsModal").modal("hide");
+           $.post("/sphere/<%= sphereobjectid %>/sendemailtomembers", 
+           {'emailto': emailto,
+           'individualemails': individualemailaddresses,
+           'emailtocurrentmemberssubject': emailtocurrentmemberssubject,
+           'emailtocurrentmembersmessage': emailtocurrentmembersmessage
+           }, function(){
+               window.location.assign("/sphere/<%= sphereobjectid %>?success=sentemails");
+           });
+       }
+   }); 
+$(document).on('click','.deletememberfromlist',function(){
+   $(this).parent().remove();
+});
+</script>
+<script>
+          // JavaScript Document
+        $(document).ready(function(){
+        $("#searchByInviteEmailInput").keyup(function() 
+        {
+        $("#emailSphereMemberSuggestionsFrame").removeClass("hidden");
+        $("#emailSphereMemberSuggestionsFrame").addClass("show");
+        var searchbox = $(this).val();
+        var sphereObjectID = $("#emailSphereObjectIDInput").val();
+        var dataString = 'sphere_invite_email='+searchbox+'&sphere_object_id='+sphereObjectID;
+        if(searchbox === '')
+        {}
+        else
+        {
+        $.ajax({
+        type: "POST",
+        url: "/sphere/<%= sphereobjectid %>/members/searchinvitesbyemail",
+        data: dataString,
+        cache: false,
+        success: function(arrayofhtml)
+        {
+           var str = arrayofhtml.join('');
+           $("#emailSphereMemberSuggestion").html(str).show();
+           $("#addemailtolistbutton").click(function(){
+                $("#emailSphereMemberSuggestion").hide();
+                var emailtoadd = $(this).data("emailtoadd");
+                var nameofrecipient = $(this).data("nameofrecipient");
+                $("#selectedmembers").append("<li style='font-size: 12pt;' class='emailaddedtolist' data-nameofrecipienttoadd='"+nameofrecipient+"' data-emailadded='"+emailtoadd+"'><span class='deletememberfromlist badge' data-emailtoadd='"+emailtoadd+"' style='cursor: pointer; color: #FF0000;'> X </span>"+emailtoadd+"</span></li>");
+                $("#emailSphereMemberSuggestionsFrame").addClass("hidden");
+             });
+        }
+        });
+        }return false; 
+        });
+        });
+      </script>
+      <script>
+          // JavaScript Document
+        $(document).ready(function(){
+        $("#searchByMemberEmailInput").keyup(function() 
+        {
+        $("#emailSphereMemberSuggestionsFrame").removeClass("hidden");
+        $("#emailSphereMemberSuggestionsFrame").addClass("show");
+        var searchbox = $(this).val();
+        var sphereObjectID = $("#emailSphereObjectIDInput").val();
+        var dataString = 'sphere_member_email='+searchbox+'&sphere_object_id='+sphereObjectID;
+        if(searchbox === '')
+        {}
+        else
+        {
+        $.ajax({
+        type: "POST",
+        url: "/sphere/<%= sphereobjectid %>/members/searchmembersbyemail",
+        data: dataString,
+        cache: false,
+        success: function(arrayofhtml)
+        {
+           var str = arrayofhtml.join('');
+           $("#emailSphereMemberSuggestion").html(str).show();
+           $("#addemailtolistbutton").click(function(){
+               $("#emailSphereMemberSuggestion").hide();
+                var emailtoadd = $(this).data("emailtoadd");
+                var nameofrecipient = $(this).data("nameofrecipient");
+                $("#selectedmembers").append("<li style='font-size: 12pt;' class='emailaddedtolist' data-nameofrecipienttoadd='"+nameofrecipient+"' data-emailadded='"+emailtoadd+"'><span class='deletememberfromlist badge' data-emailtoadd='"+emailtoadd+"' style='cursor: pointer; color: #FF0000;'> X </span>"+emailtoadd+"</span></li>");
+                $("#emailSphereMemberSuggestionsFrame").addClass("hidden");
+             });
+        }
+        });
+        }return false; 
+        });
+        });
+      </script>
+      <script>
+          // JavaScript Document
+        $(document).ready(function(){
+        $("#searchByMemberNameInput").keyup(function() 
+        {
+        $("#emailSphereMemberSuggestionsFrame").removeClass("hidden");
+        $("#emailSphereMemberSuggestionsFrame").addClass("show");
+        var searchbox = $(this).val();
+        var sphereObjectID = $("#emailSphereObjectIDInput").val();
+        var dataString = 'sphere_member_name='+searchbox+'&sphere_object_id='+sphereObjectID;
+        if(searchbox === '')
+        {}
+        else
+        {
+        $.ajax({
+        type: "POST",
+        url: "/sphere/<%= sphereobjectid %>/members/searchmembersbyname",
+        data: dataString,
+        cache: false,
+        success: function(arrayofhtml)
+        {
+           var str = arrayofhtml.join('');
+           $("#emailSphereMemberSuggestion").html(str).show();
+           $("#addemailtolistbutton").click(function(){
+               $("#emailSphereMemberSuggestion").hide();
+                var emailtoadd = $(this).data("emailtoadd");
+                var nameofrecipient = $(this).data("nameofrecipient");
+                $("#selectedmembers").append("<li style='font-size: 12pt;' class='emailaddedtolist' data-nameofrecipienttoadd='"+nameofrecipient+"' data-emailadded='"+emailtoadd+"'><span class='deletememberfromlist badge' data-emailtoadd='"+emailtoadd+"' style='cursor: pointer; color: #FF0000;'> X </span>"+emailtoadd+"</span></li>");
+                $("#emailSphereMemberSuggestionsFrame").addClass("hidden");
+             });
+        }
+        });
+        }return false; 
+        });
+        });
+      </script>
+      <script>
+          $(document).ready(function(){
+             $('select[name="emailto"]').change(function(){ if($(this).val() == "individuals") { $("#emailsToMemberSearch").removeClass("hidden"); } });
+             $('select[name="emailto"]').change(function(){ if($(this).val() == "alladmins") { $("#emailsToMemberSearch").addClass("hidden"); } });
+             $('select[name="emailto"]').change(function(){ if($(this).val() == "allcurrentmembers") { $("#emailsToMemberSearch").addClass("hidden"); } });
+             $('select[name="emailto"]').change(function(){ if($(this).val() == "allinvitedmembers") { $("#emailsToMemberSearch").addClass("hidden"); } });
+             
+             $('select[name="searchOptions"]').change(function(){ if($(this).val() == "memberSearchByName") { $("#searchByMemberNameInput").removeClass("hidden"); $("#searchByMemberEmailInput").addClass("hidden"); $("#searchByInviteEmailInput").addClass("hidden"); } });
+             $('select[name="searchOptions"]').change(function(){ if($(this).val() == "memberSearchByEmail") { $("#searchByMemberEmailInput").removeClass("hidden"); $("#searchByMemberNameInput").addClass("hidden"); $("#searchByInviteEmailInput").addClass("hidden"); } });
+             $('select[name="searchOptions"]').change(function(){ if($(this).val() == "inviteSearchByEmail") { $("#searchByInviteEmailInput").removeClass("hidden"); $("#searchByMemberEmailInput").addClass("hidden"); $("#searchByMemberNameInput").addClass("hidden"); } });
+             
+             $("#dismissEmailSphereMemberSuggestionsButton").click(function(){
+               $("#emailSphereMemberSuggestionsFrame").addClass("hidden");
+             });
+          });
+      </script>

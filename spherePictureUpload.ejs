@@ -1,0 +1,116 @@
+<script>
+	var fileInput = document.getElementById('filestyle-0');
+	var submitButton = document.getElementById('submitCustomSpherePicture');
+	var fileDisplayArea = document.getElementById('fileDisplayArea');
+	var uploadModal = document.getElementById('addPictureModal');
+
+
+	fileInput.addEventListener('change', function(e) {
+		var file = fileInput.files[0];
+		var imageType = /image.*/;
+
+		if (file.type.match(imageType)) {
+			var reader = new FileReader();
+
+			reader.onload = function(e) {
+				fileDisplayArea.innerHTML = "";
+
+				var img = new Image();
+				img.src = reader.result;
+				img.id = img.id + "uploadedImgOnDisplay";
+				img.className = img.className + " img img-responsive";
+
+				fileDisplayArea.appendChild(img);
+			}
+
+			reader.readAsDataURL(file);	
+		} else {
+			fileDisplayArea.innerHTML = "File not supported!"
+		}
+	});
+	submitButton.addEventListener('click', function(e) {
+	   var file = fileInput.files[0];
+	   var imageType = /image.*/;
+	   if (file.type.match(imageType)) {
+			var reader = new FileReader();
+
+  		var name = file.name;
+        var parseFile = new Parse.File(name, file);
+        parseFile.save().then(function(parseFile){
+          var ElectionPicture = new Parse.Object("SpherePictures");
+          if ((typeof parseFile !== "undefined") && (parseFile !== "") && (parseFile !== null)) {
+             ElectionPicture.set("picture", parseFile);
+             ElectionPicture.set("pageObjectID", "<%= sphereobjectid %>");
+             ElectionPicture.save();
+             return true;
+          } else {
+             return false;
+          }
+         }).then(function(complete){
+            location.reload(true);
+         });
+	   }
+	});
+	var fileInput1 = document.getElementById('filestyle-1');
+	var submitButton1 = document.getElementById('submitCustomBackgroundPicture');
+	var fileDisplayArea2 = document.getElementById('fileDisplayArea2');
+	var uploadModal1 = document.getElementById('addBackgroundPictureModal');
+
+
+	fileInput1.addEventListener('change', function(e) {
+		var file1 = fileInput1.files[0];
+		var imageType = /image.*/;
+
+		if (file1.type.match(imageType)) {
+			var reader = new FileReader();
+
+			reader.onload = function(e) {
+				fileDisplayArea2.innerHTML = "";
+
+				var img = new Image();
+				img.src = reader.result;
+				img.id = img.id + "uploadedImgOnDisplay";
+				img.className = img.className + " img img-responsive";
+
+				fileDisplayArea2.appendChild(img);
+			}
+
+			reader.readAsDataURL(file1);	
+		} else {
+			fileDisplayArea2.innerHTML = "File not supported!"
+		}
+	});
+	submitButton1.addEventListener('click', function(e) {
+	   var file1 = fileInput1.files[0];
+	   var imageType = /image.*/;
+	   if (file1.type.match(imageType)) {
+			var reader = new FileReader();
+			
+  		var name = file1.name;
+        var parseFile2 = new Parse.File(name, file1);
+        parseFile2.save().then(function(parseFile2){
+          var BackgroundPicture = new Parse.Object("BackgroundPictures");
+          if ((typeof parseFile2 !== "undefined") && (parseFile2 !== "") && (parseFile2 !== null)) {
+             BackgroundPicture.set("picture", parseFile2);
+             BackgroundPicture.set("pageObjectID", "<%= sphereobjectid %>");
+             BackgroundPicture.set("pageType", "sphere");
+             BackgroundPicture.save();
+             return true;
+          } else {
+             return false;
+          }
+         }).then(function(complete){
+            location.reload(true);
+         });
+	   }
+	});
+</script>
+<script>
+$(document).ready(function(){
+	$("#deleteBackgroundPicture").click(function(){
+		$.post("/sphere/<%= sphereobjectid %>/backgroundpicture/remove", {'pageObjectID': '<%= sphereobjectid %>', "pageType": "sphere"}, function(){
+			location.reload(true);
+		});	
+	});
+});
+</script>

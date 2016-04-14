@@ -1,0 +1,74 @@
+<script>
+$(document).ready(function(){
+    function checktomakesureallcomplete() {
+         
+         var electionEndDateTime = $('input[name="updatedElectionEndDateTime"]').val(); 
+         var electionName = $("#updatedElectionNameInput").val();
+         var electionType = $("#electionSettingsModal").find('input[name="updatedElectionType"]:checked').val();
+         var limitNominees = $('#switchnomineelimitedinput:checked').val() || false;
+         var commentsOnElectionAllowed = $('#switchcommentsonelectionallowedinput:checked').val() || false;
+         if((commentsOnElectionAllowed == "true") || (commentsOnElectionAllowed == "on") || (commentsOnElectionAllowed == true)){
+              var allowElectionComments = true;   
+          } else {
+              var allowElectionComments = false;
+          }
+         var nominationsallowed = $("#electionSettingsModal").find('input[name="nominationsallowed"]').val();
+         if((electionEndDateTime == "") || (electionName == "") || (nominationsallowed <= 0)) {
+             if(electionEndDateTime == "") {
+               $("#listoferrors").append("<li>Please Make Sure The Election Has A Set End Date And Time</li>");
+             }
+             if(electionName == "") {
+               $("#listoferrors").append("<li>Please Make Sure The Election Has A Name</li>");
+             }
+             if(nominationsallowed <= 0){
+                $("#listoferrors").append("<li>Please Make Sure The Election A Set Amount Of Nominations Allowed</li>"); 
+             }
+            $("#electionCreationErrors").removeClass("hidden");
+            return false;
+         } else {
+              var endDateInput = $('input[name="updatedElectionEndDateTime"]');
+              var dateSet = $("#electionSettingsModal").find(endDateInput).val();
+              var dateTime = moment(dateSet, "MM-DD-YYYY HH:mm A");
+              //var dateTimeUTC = moment.utc(dateTime);
+              var dateTimeFormatted = dateTime.toISOString();
+              
+              var electionName = $("#updatedElectionNameInput").val();
+              var electionDescription = $("textarea#updatedElectionDescription").val();
+              var voteOrEval = $('input[name="updatedVoteOrEval"]:checked').val();
+              var electionVotesAllowed = $('input[name="updatedElectionVotesAllowed"]').val();
+              var totalBudget = $('input[name="updatedTotalBudget"]').val();
+              var rangeDefinition = $('select[name="updatedRangeDefinition"] option:selected').val();
+            
+              $("#submitUpdatedElectionButton").find(endDateInput).val(dateTimeFormatted);
+              $.post("/sphere/<%= sphereobjectid %>/election/<%= electionobjectid %>/edit", 
+               {'updatedElectionType': electionType,
+               'nomineeLimitedToMembers': limitNominees,
+               'nominationsAllowed': nominationsallowed,
+               'updatedElectionEndDateTime': dateTimeFormatted,
+               'updatedElectionName': electionName,
+               'updatedElectionDescription': electionDescription,
+               'updatedVoteOrEval': voteOrEval,
+               'updatedElectionVotesAllowed': electionVotesAllowed,
+               'updatedRangeDefinition': rangeDefinition,
+               'updatedTotalBudget': totalBudget,
+               'allowCommentsOnElection': allowElectionComments
+               }, function(){
+                  location.reload(true);
+               });
+               return [];
+         }
+     }
+     $(window).keydown(function(event){
+         if(event.keyCode == 13) {
+          //event.preventDefault();
+          //checktomakesureallcomplete();
+        }
+      });
+     $("#submitUpdatedElectionButton").click(function(event){
+          checktomakesureallcomplete();
+     });
+  $("#electionUpdateErrors").click(function(){
+    $(this).addClass("hidden");
+  });
+});
+</script>

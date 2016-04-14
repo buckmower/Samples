@@ -1,0 +1,165 @@
+<script>
+$(document).ready(function(){
+  var oldDateUnix = <%= electionenddatetime %>;
+  var oldDateFormatted = moment.unix(oldDateUnix).format("MM-DD-YYYY hh:mm A");
+  var oldName = "<%= electionname %>";
+  var electionID = "<%= electionobjectid %>";
+  var electionVotesAllowed = parseInt(<%= electionvotesallowed %>);
+  var votesCast = "<%= votescast %>";
+  var electionType = "<%= electiontype %>";
+  var numberofnominationsallowed = "<%= numberofnominationsallowedperuserinelection %>";
+  var voteoreval = "<%= voteoreval %>";
+  var rangedefinition = "<%= rangedefinition %>";
+  var nowDateObject = new Date();
+  var now = moment(nowDateObject).unix();
+  $("#launchsettingsmodalbutton").click(function(){
+      if(now > oldDateUnix) {
+          $("#editElectionSettingTitle").html("This Election Is Over!");
+          if(electionType == 'open') {
+             $("#updateOptionsRadios1").prop("checked", true);
+          } else if(electionType == 'closed') {
+             $("#updateOptionsRadios2").prop("checked", true);
+          } else if(electionType == '1per') {
+             $("#updateOptionsRadios3").prop("checked", true);
+          } else if(electionType == 'custom') {
+             $("#nominationsalloweddiv").removeClass("hidden").show();
+             $("#updateOptionsRadios4").prop("checked", true);
+             $("#nominationsallowed").val(numberofnominationsallowed);
+          }
+          if(voteoreval == "vote") {
+              $("#updatedofvotetyperadio").prop("checked", true);
+              $("#updatedvotesallowedinput").removeClass("hidden");
+              $("#updatedrangedefinitioninput").addClass("hidden");
+          } else if(voteoreval == "evaluation") {
+              $("#updatedofevaltyperadio").prop("checked", true);
+              $("#updatedvotesallowedinput").addClass("hidden");
+              $("#updatedbudgetdefinitioninput").addClass("hidden");
+              $("#updatedrangedefinitioninput").removeClass("hidden");
+              if(rangedefinition == "zerototen") {
+                  $('select[name="updatedRangeDefinition"]').find('option[value="zerototen"]').prop("selected",true);
+              } else if(rangedefinition == "zerotohundred") {
+                  $('select[name="updatedRangeDefinition"]').find('option[value="zerotohundred"]').prop("selected",true);
+              } else {
+                  $('select[name="updatedRangeDefinition"]').find('option[value="undefined"]').prop("selected",true);
+              }
+          } else if(voteoreval == "allocation") {
+                  $("#updatedofbudgettyperadio").prop("checked", true);
+                  $("#updatedvotesallowedinput").addClass("hidden");
+                  $("#updatedrangedefinitioninput").addClass("hidden");
+                  $("#updatedbudgetdefinitioninput").removeClass("hidden");
+                  $('input[name="updatedElectionVotesAllowed"]').val(null);
+          }
+          $('input[name="updatedElectionType"]').prop( "disabled", true );
+          $("#nominationsallowed").prop("disabled", true);
+          $('input[name="updatedVoteOrEval"]').prop( "disabled", true );
+          $('input[name="updatedRangeDefinition"]').prop( "disabled", true );
+          $('input[name="updatedElectionEndDateTime"]').prop( "disabled", true ).val(oldDateFormatted);
+          $('input[name="updatedElectionName"]').prop( "disabled", true ).val(oldName);
+          $('input[name="electionID"]').val(electionID);
+          $('input[name="submitUpdatedElection"]').prop( "disabled", true );
+          $('input[name="updatedElectionVotesAllowed"]').prop( "disabled", true ).val(electionVotesAllowed);
+          $('input[name="updatedTotalBudget"]').prop( "disabled", true ).val(electionVotesAllowed);
+          $("#switchnomineelimitedinput").prop("disabled", true);
+          $("#switchcommentsonelectionallowedinput").prop("disabled", false).prop("checked", <%= commentsonelectionallowed %>);
+      } else if(now <= oldDateUnix){
+          if(votesCast > 0) {
+              $("#editElectionSettingTitle").html("Warning! Votes have already been cast!");
+              if(electionType == 'open') {
+                 $("#updateOptionsRadios1").prop("checked", true);
+              } else if(electionType == 'closed') {
+                 $("#updateOptionsRadios2").prop("checked", true);
+              } else if(electionType == '1per') {
+                 $("#updateOptionsRadios3").prop("checked", true);
+              } else if(electionType == 'custom') {
+                 $("#nominationsalloweddiv").removeClass("hidden").show();
+                 $("#updateOptionsRadios4").prop("checked", true);
+                 $("#nominationsallowed").val(numberofnominationsallowed);
+              }
+              if(voteoreval == "vote") {
+                  $("#updatedofvotetyperadio").prop("checked", true);
+                  $("#updatedvotesallowedinput").removeClass("hidden");
+                  $("#updatedrangedefinitioninput").addClass("hidden");
+              } else if(voteoreval == "evaluation") {
+                  $("#updatedofevaltyperadio").prop("checked", true);
+                  $("#updatedvotesallowedinput").addClass("hidden");
+                  $("#updatedbudgetdefinitioninput").addClass("hidden");
+                  $("#updatedrangedefinitioninput").removeClass("hidden");
+                  if(rangedefinition == "zerototen") {
+                      $('select[name="updatedRangeDefinition"]').find('option[value="zerototen"]').prop("selected",true);
+                  } else if(rangedefinition == "zerotohundred") {
+                      $('select[name="updatedRangeDefinition"]').find('option[value="zerotohundred"]').prop("selected",true);
+                  } else {
+                      $('select[name="updatedRangeDefinition"]').find('option[value="undefined"]').prop("selected",true);
+                  }
+              } else if(voteoreval == "allocation") {
+                  $("#updatedofbudgettyperadio").prop("checked", true);
+                  $("#updatedvotesallowedinput").addClass("hidden");
+                  $("#updatedrangedefinitioninput").addClass("hidden");
+                  $("#updatedbudgetdefinitioninput").removeClass("hidden");
+                  $('input[name="updatedElectionVotesAllowed"]').val(null);
+              }
+              $('input[name="updatedElectionType"]').prop( "disabled", true );
+              $("#nominationsallowed").prop("disabled", true);
+              $('input[name="updatedVoteOrEval"]').prop( "disabled", true );
+              $('input[name="updatedRangeDefinition"]').prop( "disabled", true );
+              $('input[name="updatedElectionEndDateTime"]').prop( "disabled", true ).val(oldDateFormatted);
+              $('input[name="updatedElectionName"]').prop( "disabled", false ).val(oldName);
+              $('input[name="electionID"]').val(electionID);
+              $('input[name="submitUpdatedElection"]').prop( "disabled", false );
+              $('input[name="updatedElectionVotesAllowed"]').prop( "disabled", true ).val(electionVotesAllowed);
+              $('input[name="updatedTotalBudget"]').prop( "disabled", true ).val(electionVotesAllowed);
+              $("#switchnomineelimitedinput").prop("disabled", true);
+              $("#switchcommentsonelectionallowedinput").prop("disabled", false).prop("checked", <%= commentsonelectionallowed %>);
+          } else {
+              $("#editElectionSettingTitle").html("This Election is Active!");
+              if(electionType == 'open') {
+                 $("#updateOptionsRadios1").prop("checked", true);
+              } else if(electionType == 'closed') {
+                 $("#updateOptionsRadios2").prop("checked", true);
+              } else if(electionType == '1per') {
+                 $("#updateOptionsRadios3").prop("checked", true);
+              } else if(electionType == 'custom') {
+                 $("#nominationsalloweddiv").removeClass("hidden").show();
+                 $("#updateOptionsRadios4").prop("checked", true);
+                 $("#nominationsallowed").val(numberofnominationsallowed);
+              }
+              if(voteoreval == "vote") {
+                  $("#updatedofvotetyperadio").prop("checked", true);
+                  $("#updatedvotesallowedinput").removeClass("hidden");
+                  $("#updatedrangedefinitioninput").addClass("hidden");
+              } else if(voteoreval == "evaluation") {
+                  $("#updatedofevaltyperadio").prop("checked", true);
+                  $("#updatedvotesallowedinput").addClass("hidden");
+                  $("#updatedbudgetdefinitioninput").addClass("hidden");
+                  $("#updatedrangedefinitioninput").removeClass("hidden");
+                  if(rangedefinition == "zerototen") {
+                      $('select[name="updatedRangeDefinition"]').find('option[value="zerototen"]').prop("selected",true);
+                  } else if(rangedefinition == "zerotohundred") {
+                      $('select[name="updatedRangeDefinition"]').find('option[value="zerotohundred"]').prop("selected",true);
+                  } else {
+                  $('select[name="updatedRangeDefinition"]').find('option[value="undefined"]').prop("selected",true);
+                  }
+              } else if(voteoreval == "allocation") {
+                  $("#updatedofbudgettyperadio").prop("checked", true);
+                  $("#updatedvotesallowedinput").addClass("hidden");
+                  $("#updatedrangedefinitioninput").addClass("hidden");
+                  $("#updatedbudgetdefinitioninput").removeClass("hidden");
+                  $('input[name="updatedElectionVotesAllowed"]').val(null);
+              }
+              $('input[name="updatedElectionType"]').prop( "disabled", false );
+              $("#nominationsallowed").prop("disabled", false);
+              $('input[name="updatedVoteOrEval"]').prop( "disabled", false );
+              $('input[name="updatedRangeDefinition"]').prop( "disabled", false );
+              $('input[name="updatedElectionEndDateTime"]').prop( "disabled", false ).val(oldDateFormatted);
+              $('input[name="updatedElectionName"]').prop( "disabled", false ).val(oldName);
+              $('input[name="electionID"]').val(electionID);
+              $('input[name="submitUpdatedElection"]').prop( "disabled", false );
+              $('input[name="updatedElectionVotesAllowed"]').prop( "disabled", false ).val(electionVotesAllowed);
+              $('input[name="updatedTotalBudget"]').prop( "disabled", false ).val(electionVotesAllowed);
+              $("#switchnomineelimitedinput").prop("disabled", false);
+              $("#switchcommentsonelectionallowedinput").prop("disabled", false).prop("checked", <%= commentsonelectionallowed %>);
+          }
+      }
+  });
+});
+</script>

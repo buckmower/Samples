@@ -1,0 +1,122 @@
+<script>
+$(function () {
+
+  'use strict';
+
+  var console = window.console || { log: function () {} },
+      $alert = $('.docs-alert'),
+      $message = $alert.find('.message'),
+      showMessage = function (message, type) {
+        $message.text(message);
+
+        if (type) {
+          $message.addClass(type);
+        }
+
+        $alert.fadeIn();
+
+        setTimeout(function () {
+          $alert.fadeOut();
+        }, 3000);
+      };
+var options = {
+     responsive: false,
+     movable: true,
+     resizable: false,
+     zoomable: false,
+     touchDragZoom: false,
+     mouseWheelZoom: false,
+     minCanvasWidth: 256,
+     minCanvasHeight: 256,
+     minCropBoxWidth: 256,
+     minCropBoxHeight: 256,
+     minContainerWidth: 256,
+     minContainerHeight: 256,
+     aspectRatio: 1/1
+};
+// Tooltips
+$('[data-toggle="tooltip"]').tooltip();
+// Methods
+var cropResults = new Array();
+$(document).on('click', 'button[data-method]', function () {
+  var data = $(this).data(),
+      $target,
+      result;
+
+  if (data.method) {
+    data = $.extend({}, data); // Clone a new one
+
+    if (typeof data.target !== 'undefined') {
+      var $target = $(data.target);
+
+      if (typeof data.option === 'undefined') {
+        try {
+          data.option = JSON.parse($target.val());
+        } catch (e) {
+          console.log(e.message);
+        }
+      }
+    }
+
+    var result = $('#uploadedProfilePicImgOnDisplay').cropper(options);
+    cropResults.push(result);
+    if ($.isPlainObject(result) && $target) {
+      try {
+        $target.val(JSON.stringify(result));
+      } catch (e) {
+        console.log(e.message);
+      }
+    }
+  }
+});
+$("#submitCustomUserPicture").one('click', function(e) {
+   var lastOfArray = cropResults.length - 1 || 0;
+   var cropresults = cropResults[lastOfArray] || false;
+   if(cropresults !== false){
+   var cropdata = cropresults.cropper('getData');
+   } else {
+    var cropdata = false;
+   }
+   sendFileToParse(cropdata);
+});
+function sendFileToParse(cropdata){
+     var fileInput = document.getElementById('inputProfileImage');
+     var file = fileInput.files[0];
+     var imageType = /image.*/;
+     var reader = new FileReader();
+     reader.onload = function(e) {
+       var img = new Image();
+       img.src = reader.result;
+       if(cropdata !== false){
+        var result = cropdata;
+       } else {
+        var result = {"width": img.width, "height": img.height, "x": 0, "y": 0};
+       }
+       if (file.type.match(imageType)) {
+        if((result.width >= 256) && (result.height >= 256)) {
+        var name = file.name;
+          var parseFile = new Parse.File(name, file);
+          parseFile.save().then(function(parseFile){
+            var UserPictures = new Parse.Object("ElectionPictures");
+            if ((typeof parseFile !== "undefined") && (parseFile !== "") && (parseFile !== null)) {
+               UserPictures.set("cropCoordinates", result);
+               UserPictures.set("picture", parseFile);
+               UserPictures.set("pageObjectID", "<%= electionobjectid %>");
+               UserPictures.save();
+               return true;
+            } else {
+               return false;
+            }
+           }).then(function(complete){
+              location.reload(true);
+              window.location.assign("/sphere/<%= sphereobjectid %>/election/<%= electionobjectid %>");
+           });
+        } else {
+          window.location.assign("/sphere/<%= sphereobjectid %>/election/<%= electionobjectid %>?error=profileimagetoosmall");
+        }
+       }
+    }
+     reader.readAsDataURL(file);
+  };
+});
+</script>

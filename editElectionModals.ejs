@@ -1,0 +1,118 @@
+<div class="modal fade" id="addPictureModal" tabindex="-1" role="dialog" aria-labelledby="addPictureModal" aria-hidden="true">
+     <div class="modal-dialog modal-lg">
+       <div class="modal-content">
+         <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+           <h4 class="modal-title">Add a Picture</h4>
+         </div>
+         <div class="modal-body" style="overflow-y: scroll;">
+            <!-- Alert -->
+            <div class="alert alert-warning hidden"><span id="profile-picture-alert"></span><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
+            <div class="row">
+              <div class="col-xs-12">
+                <label for="inputProfileImage">Upload A Picture with Dimensions 256 x 256</label>
+                <input type="file" id="inputProfileImage" name="inputProfileImage" value="">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <div id="fileDisplayArea" class="profile-img-container"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="btn-group">
+                  <button class="btn btn-inverse" data-method="setDragMode" data-option="crop" type="button" title="Crop">
+                    <span class="docs-tooltip" data-toggle="tooltip" title="crop">
+                      <span class="icon icon-crop"></span>
+                    </span>
+                  </button>
+                  <button class="btn btn-primary" data-method="setDragMode" data-option="move" type="button" title="Move">
+                    <span class="docs-tooltip" data-toggle="tooltip" title="move">
+                      <span class="icon icon-move"></span>
+                    </span>
+                  </button>
+                </div>
+                <div class="btn-group">
+                  <button class="btn btn-primary" data-method="clear" type="button" title="Clear">
+                    <span class="docs-tooltip" data-toggle="tooltip" title="clear">
+                      <span class="icon icon-remove"></span>
+                    </span>
+                  </button>
+                  <button class="btn btn-primary" data-method="reset" type="button" title="Reset">
+                    <span class="docs-tooltip" data-toggle="tooltip" title="reset">
+                      <span class="icon icon-refresh"></span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+           <button id="submitCustomUserPicture" class="btn btn-md btn-primary">Save</button>
+           <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+           <div class="clearfix"></div>
+          </div>
+       </div><!-- /.modal-content -->
+     </div><!-- /.modal-dialog -->
+   </div><!-- /.modal -->
+   <div class="modal fade" id="addBackgroundPictureModal" tabindex="-1" role="dialog" aria-labelledby="addBackgroundPictureModal" aria-hidden="true">
+     <div class="modal-dialog modal-lg">
+       <div class="modal-content">
+         <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+           <h4 class="modal-title">Add a Background Picture</h4>
+         </div>
+         <div class="modal-body" style="overflow-y: scroll;">
+            <!-- Alert -->
+            <div class="alert alert-warning hidden"><span id="background-picture-alert"></span><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
+            <div class="row">
+              <div class="col-xs-12">
+                <label for="inputBackgroundImage">Upload A Background Image with Dimensions 972 x 261</label>
+                <input type="file" id="inputBackgroundImage" name="inputBackgroundImage" value="">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <div id="fileDisplayArea2" class="background-img-container"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="btn-group">
+                  <button class="btn btn-inverse" data-method="setDragMode" data-option="crop" type="button" title="Crop">
+                    <span class="docs-tooltip" data-toggle="tooltip" title="crop">
+                      <span class="icon icon-crop"></span>
+                    </span>
+                  </button>
+                  <button class="btn btn-primary" data-method="setDragMode" data-option="move" type="button" title="Move">
+                    <span class="docs-tooltip" data-toggle="tooltip" title="move">
+                      <span class="icon icon-move"></span>
+                    </span>
+                  </button>
+                </div>
+                <div class="btn-group">
+                  <button class="btn btn-primary" data-method="clear" type="button" title="Clear">
+                    <span class="docs-tooltip" data-toggle="tooltip" title="clear">
+                      <span class="icon icon-remove"></span>
+                    </span>
+                  </button>
+                  <button class="btn btn-primary" data-method="reset" type="button" title="Reset">
+                    <span class="docs-tooltip" data-toggle="tooltip" title="reset">
+                      <span class="icon icon-refresh"></span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+        </div>
+         <div class="modal-footer">
+           <% if(electionbackgroundpictureexists) { %>
+           <button type="button" id="deleteBackgroundPicture" class="btn btn-danger pull-left">Delete</button>
+           <% } %>
+           <button id="submitCustomBackgroundPicture" class="btn btn-md btn-primary">Save</button>
+           <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+         </div>
+       </div><!-- /.modal-content -->
+     </div><!-- /.modal-dialog -->
+   </div><!-- /.modal -->
